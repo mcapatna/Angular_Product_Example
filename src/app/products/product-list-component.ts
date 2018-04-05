@@ -6,6 +6,18 @@ import { IProduct } from './products';
     styleUrls:['./product-list-component.css']
 })
 export class ProductListComponent implements OnInit{
+
+constructor(){
+    this.filteredProducts=this.products;
+    this.listFilter='cart';
+}
+    performFilter(fliterBy: string): IProduct[] {
+        fliterBy=fliterBy.toLowerCase().trim();
+        return this.products.filter((product:IProduct)=>
+            product.productName.toLocaleLowerCase().indexOf(fliterBy)!=-1);
+    }
+
+
     ngOnInit(): void {
        console.log('onInt called');
     }
@@ -13,7 +25,16 @@ export class ProductListComponent implements OnInit{
     imageWidth:number=50;
     imageMargin:number=2;
     showImage:boolean=false;
-    listFilter:string='cart';
+
+    filteredProducts : IProduct[];
+    _listFilter:string;
+    get listFilter():string{
+        return this._listFilter;
+    }
+    set listFilter(value:string){
+        this._listFilter=value;
+        this.filteredProducts=this.listFilter?this.performFilter(this.listFilter):this.products;
+    }
     products: IProduct[]=[{
         "productId":2,
         "productName":"Garden Cart",
